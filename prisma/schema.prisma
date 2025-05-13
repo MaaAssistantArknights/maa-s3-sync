@@ -1,0 +1,43 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgres"
+  url      = env("DATABASE_URL")
+}
+
+enum JobStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  ERROR
+}
+
+model Task {
+  id        Int      @id @default(autoincrement())
+  title     String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  jobs Job[]
+}
+
+model Job {
+  id          Int       @id @default(autoincrement())
+  taskId      Int
+  status      JobStatus @default(PENDING)
+  logFile     String?
+  triggeredBy String    @default("*SYSTEM*")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+
+  task Task @relation(fields: [taskId], references: [id])
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  message   String
+  createdAt DateTime @default(now())
+}
