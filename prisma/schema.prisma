@@ -1,6 +1,5 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "../generated/prisma"
 }
 
 datasource db {
@@ -15,29 +14,75 @@ enum JobStatus {
   ERROR
 }
 
-model Task {
-  id        Int      @id @default(autoincrement())
-  title     String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+enum VersionChannel {
+  STABLE
+  BETA
+  ALPHA
+}
 
-  jobs Job[]
+enum PackageSyncStatus {
+  PENDING
+  IN_PROGRESS
+  COMPLETED
+  ERROR
 }
 
 model Job {
   id          Int       @id @default(autoincrement())
-  taskId      Int
+  taskSlug    String
   status      JobStatus @default(PENDING)
   logFile     String?
   triggeredBy String    @default("*SYSTEM*")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
 
-  task Task @relation(fields: [taskId], references: [id])
+  syncId Int
+  sync   PackageSync @relation(fields: [syncId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model AuditLog {
-  id        Int      @id @default(autoincrement())
-  message   String
+  id      Int    @id @default(autoincrement())
+  module  String
+  action  String
+  message String
+
   createdAt DateTime @default(now())
+}
+
+model Version {
+  id          Int            @id @default(autoincrement())
+  channel     VersionChannel
+  display     String
+  releaseDate DateTime
+  packages    Package[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Package {
+  id          Int          @id @default(autoincrement())
+  triplet     String
+  downloadUrl String?
+  sync        PackageSync?
+
+  versionId Int
+  version   Version @relation(fields: [versionId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model PackageSync {
+  id     Int               @id @default(autoincrement())
+  status PackageSyncStatus @default(PENDING)
+
+  packageId Int     @unique
+  package   Package @relation(fields: [packageId], references: [id])
+
+  jobs Job[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }

@@ -1,0 +1,10 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+.dark {
+  --ui-bg: var(--color-stone-900);
+  --ui-bg-muted: var(--color-stone-800);
+  --ui-bg-elevated: var(--color-stone-800);
+  --ui-bg-accented: var(--color-stone-700);
+  --ui-bg-inverted: var(--color-white);
+}

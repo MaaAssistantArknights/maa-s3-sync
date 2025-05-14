@@ -1,7 +1,20 @@
-// https://nuxt.com/docs/api/configuration/nuxt-config
+import tailwindcss from "@tailwindcss/vite";
+
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
-  devtools: { enabled: true },
+  devtools: {
+    enabled: true,
+
+    timeline: {
+      enabled: true,
+    },
+  },
+
+  runtimeConfig: {
+    public: {
+      appVersion: 'v1.0.0',
+    }
+  },
 
   modules: [
     '@nuxt/eslint',
@@ -12,16 +25,11 @@ export default defineNuxtConfig({
     '@prisma/nuxt',
   ],
 
-  alias: {
-    '.prisma/client/index-browser': '@prisma/client'
+  nitro: {
+    experimental: {
+      tasks: true,
+    },
   },
 
-  vite: {
-    resolve: {
-      alias: {
-        // reference: https://www.prisma.io/docs/orm/more/help-and-troubleshooting/prisma-nuxt-module#resolving-typeerror-failed-to-resolve-module-specifier-prismaclientindex-browser
-        '.prisma/client/index-browser': './node_modules/@prisma/client/index-browser.js',
-      },
-    },
-  }
+  css: ['~/assets/css/main.css'],
 })
