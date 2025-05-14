@@ -25,6 +25,6 @@ const statusBadgeColor = {
   PENDING: 'warning',
   IN_PROGRESS: 'info',
   COMPLETED: 'success',
-  ERROR: 'danger',
+  ERROR: 'error',
 }
 </script>

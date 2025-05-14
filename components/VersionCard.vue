@@ -15,7 +15,7 @@
               (<NuxtTime :datetime="info.releaseDate" style="long" />)
             </span>
           </div>
-          <div class="flex">
+          <div>
             <TripletBadge v-for="pkg in info.packages" :key="pkg.id" :pkg="pkg" />
           </div>
         </div>
@@ -33,7 +33,7 @@ import TripletBadge from '~/components/TripletBadge.vue'
 const { loggedIn } = useUserSession()
 
 const channelEmoji: Record<string, string> = {
-  alpha: '🚀',
+  // alpha: '🚀',
   beta: '🧪',
   stable: '✅',
 }
