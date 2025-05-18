@@ -1,4 +1,4 @@
-import { HttpProxyAgent } from "~/server/utils/http_proxy"
+import { HttpProxyAgent } from "~/server/utils/request_proxy"
 import type { NitroFetchOptions, NitroFetchRequest } from 'nitropack'
 
 function useGitHubToken(url: string): Record<string, string> {

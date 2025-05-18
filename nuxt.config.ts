@@ -1,5 +1,3 @@
-import tailwindcss from "@tailwindcss/vite";
-
 export default defineNuxtConfig({
   compatibilityDate: '2024-11-01',
   devtools: {
@@ -13,7 +11,10 @@ export default defineNuxtConfig({
   runtimeConfig: {
     public: {
       appVersion: 'v1.0.0',
-    }
+    },
+    authorizedRoutes: [
+      'POST /api/job/trigger',
+    ]
   },
 
   modules: [

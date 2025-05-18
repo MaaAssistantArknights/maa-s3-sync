@@ -7,4 +7,5 @@ export type {
   Version,
   Package,
   PackageSync,
+  SecretKey,
 } from "@prisma/client";
