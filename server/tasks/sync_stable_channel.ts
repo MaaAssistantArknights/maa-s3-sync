@@ -1,7 +1,5 @@
 // TODOS:
 // 1. Add a file logger
-// 2. typo
-// 3. upload to s3
 
 import fs from 'fs';
 import path from 'path';
@@ -65,7 +63,6 @@ export default defineTask({
         .filter((asset) => parseTriplet(asset.name)) // Remove non-client packages
   
       console.log(`--- Got ${assets.length} items`)
-      console.log(assets)
 
       console.log('Step 6. Create or update version in the database')
       const version = await prisma.version.upsert({
@@ -93,10 +90,51 @@ export default defineTask({
         }
       }) || []
 
+      // 选出不存在的或者大小不一致的文件
       const needDownloadAssets = assets.filter((asset) => {
         return asset.size !== existingFiles.find(f => f.name === asset.name)?.size
       })
 
+      // 已经存在且大小相同的文件，更新其数据
+      const existingAssets = assets.filter((asset) => {
+        return asset.size === existingFiles.find(f => f.name === asset.name)?.size
+      })
+
+      existingAssets.forEach(async (asset) => {
+        const triplet = parseTriplet(asset.name)
+        const pkg = await prisma.package.upsert({
+          create: {
+            downloadUrl: asset.url,
+            triplet: triplet,
+            versionId: version.id,
+            nodeId: asset.node_id,
+            fileName: asset.name,
+          },
+          update: {
+            downloadUrl: asset.url,
+            triplet: triplet,
+            versionId: version.id,
+            fileName: asset.name,
+          },
+          where: {
+            nodeId: asset.node_id
+          },
+        })
+        await prisma.packageSync.upsert({
+          create: {
+            packageId: pkg.id,
+            status: 'COMPLETED',
+          },
+          update: {
+            status: 'COMPLETED',
+          },
+          where: {
+            packageId: pkg.id,
+          }
+        })
+      })
+
+      console.log(`--- Already synced ${existingAssets.length} items`)
       console.log(`--- Need to download ${needDownloadAssets.length} items`)
 
       console.log('Step 8. Create or update packages in the database')
@@ -226,6 +264,7 @@ export default defineTask({
             fs.createReadStream(filePath),
           )
             .then(async () => {
+              console.log(`--- Uploaded ${transfer.filename} to S3`)
               await prisma.packageSync.update({
                 where: {
                   id: transfer.syncId,
