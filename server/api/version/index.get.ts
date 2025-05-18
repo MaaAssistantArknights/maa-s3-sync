@@ -47,7 +47,16 @@ export default defineEventHandler(async (event) => {
     include: {
       packages: {
         include: {
-          sync: true,
+          sync: {
+            include: {
+              jobs: {
+                orderBy: {
+                  createdAt: "desc",
+                },
+                take: 1,
+              },
+            }
+          },
         }
       }
     }

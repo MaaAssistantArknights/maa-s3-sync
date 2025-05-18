@@ -20,13 +20,6 @@ enum VersionChannel {
   ALPHA
 }
 
-enum PackageSyncStatus {
-  PENDING
-  IN_PROGRESS
-  COMPLETED
-  ERROR
-}
-
 model Job {
   id          Int       @id @default(autoincrement())
   taskSlug    String
@@ -77,8 +70,7 @@ model Package {
 }
 
 model PackageSync {
-  id     Int               @id @default(autoincrement())
-  status PackageSyncStatus @default(PENDING)
+  id      Int               @id @default(autoincrement())
 
   packageId Int     @unique
   package   Package @relation(fields: [packageId], references: [id])

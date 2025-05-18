@@ -3,7 +3,10 @@
     <UBadge color="neutral" variant="soft" class="w-24 justify-center">
       {{ `${channelEmoji[channel]} ${channel}` }}
     </UBadge>
-    <div class="ml-4 w-full bg-elevated rounded-lg p-4">
+    <div v-if="!info">
+      <span class="text-neutral-500">Not Synced</span>
+    </div>
+    <div v-else class="ml-4 w-full bg-elevated rounded-lg p-4">
       <div class="flex items-center justify-between">
         <div>
           <div class="mb-2">
@@ -19,9 +22,7 @@
             <TripletBadge v-for="pkg in info.packages" :key="pkg.id" :pkg="pkg" />
           </div>
         </div>
-        <div v-if="loggedIn">
-
-        </div>
+        <div v-if="loggedIn"/>
       </div>
     </div>
   </div>
@@ -29,6 +30,7 @@
 
 <script lang="ts" setup>
 import TripletBadge from '~/components/TripletBadge.vue'
+import type { Version, Package, PackageSync, Job } from '~/shared/types/schema'
 
 const { loggedIn } = useUserSession()
 
@@ -49,7 +51,15 @@ const { channel, version } = defineProps({
   },
 })
 
-const response = await useFetch('/api/version', {
+type VersionResponse = Version & {
+  packages: (Package & {
+    sync: PackageSync & {
+      jobs: Job[]
+    }
+  })[]
+}
+
+const response = await useFetch<VersionResponse>('/api/version', {
   method: 'GET',
   params: {
     channel,

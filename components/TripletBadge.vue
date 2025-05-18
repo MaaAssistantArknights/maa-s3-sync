@@ -1,18 +1,21 @@
 <template>
-  <UTooltip :content="{side: 'top'}" :text="pkg.sync.status" arrow color="neutral" variant="subtle">
-    <UBadge :color="statusBadgeColor[pkg.sync.status]" variant="subtle" class="mr-2 cursor-pointer">
-      {{ `${statusEmoji[pkg.sync.status]} ${pkg.triplet}` }}
+  <UTooltip :content="{side: 'top'}" :text="pkg.sync.jobs[0].status" arrow color="neutral" variant="subtle">
+    <UBadge :color="statusBadgeColor[pkg.sync.jobs[0].status]" variant="subtle" class="mr-2 cursor-pointer">
+      {{ `${statusEmoji[pkg.sync.jobs[0].status]} ${pkg.triplet}` }}
     </UBadge>
   </UTooltip>
 </template>
 
 <script lang="ts" setup>
-defineProps({
-  pkg: {
-    type: Object,
-    required: true,
-  },
-})
+import type { Package, PackageSync, Job } from '~/shared/types/schema'
+
+defineProps<{
+  pkg: Package & {
+    sync: PackageSync & {
+      jobs: Job[]
+    }
+  }
+}>()
 
 const statusEmoji: Record<string, string> = {
   PENDING: '⏳',
@@ -21,7 +24,7 @@ const statusEmoji: Record<string, string> = {
   ERROR: '❌',
 }
 
-const statusBadgeColor = {
+const statusBadgeColor: Record<string, 'warning' | 'info' | 'success' | 'error'> = {
   PENDING: 'warning',
   IN_PROGRESS: 'info',
   COMPLETED: 'success',

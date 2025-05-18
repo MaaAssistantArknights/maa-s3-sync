@@ -1,10 +1,8 @@
-// TODOS:
-// 1. Add a file logger
-
 import fs from 'fs';
 import path from 'path';
 import { Writable } from 'stream';
 import * as Minio from 'minio';
+import pino from 'pino'
 
 import prisma from "~/lib/prisma";
 import sfetch from '~/server/utils/server_fetch'
@@ -17,9 +15,35 @@ export default defineTask({
     name: 'sync_beta_channel',
     description: 'Sync Client Installers from MAA Beta Channel',
   },
-  async run() {
+  async run({ payload }) {
+    const uuid = crypto.randomUUID();
+
+    const trigger = payload.trigger as string | undefined
+
+    if (!fs.existsSync(`./logs/task_sync_beta_channel`)) {
+      fs.mkdirSync(`./logs/task_sync_beta_channel`, { recursive: true });
+    }
+
+    const logger = pino({
+      name: `Task - Sync Beta Channel`,
+      transport: {
+        targets: [
+          {
+            target: 'pino-pretty',
+            level: 'info',
+            options: { colorize: true, translateTime: 'SYS:standard' },
+          },
+          {
+            target: 'pino-pretty',
+            level: 'info',
+            options: { destination: `./logs/task_sync_beta_channel/${uuid}.log`, colorize: false, translateTime: 'SYS:standard' },
+          },
+        ]
+      }
+    })
+
     try {
-      console.log('Step 1. Check required variables')
+      logger.info('Step 1. Check required variables')
       const requiredEnvKeys = [
         'GITHUB_TOKEN',
         'S3_ENDPOINT',
@@ -33,7 +57,7 @@ export default defineTask({
         }
       }
 
-      console.log('Step 2. Create S3 Client')
+      logger.info('Step 2. Create S3 Client')
       const uri = new URL(process.env.S3_ENDPOINT!)
       const mc = new Minio.Client({
         endPoint: uri.hostname,
@@ -44,13 +68,13 @@ export default defineTask({
         secretKey: process.env.S3_SECRET_KEY!,
       })
 
-      console.log('Step 3. Get the latest version from the API')
+      logger.info('Step 3. Get the latest version from the API')
       const versionApiResponse = await sfetch('https://api.github.com/repos/MaaAssistantArknights/MaaAssistantArknights/releases') as GitHub.Release[]
       if (!versionApiResponse) {
         throw new Error('Failed to fetch the latest version from the API')
       }
 
-      console.log('Step 4. Filter the latest beta version')
+      logger.info('Step 4. Filter the latest beta version')
       const latestBetaVersion = versionApiResponse
         .filter((release) => release.tag_name.includes('beta'))
         .sort((a, b) => new Date(b.published_at).getTime() - new Date(a.published_at).getTime())[0]
@@ -58,13 +82,13 @@ export default defineTask({
         throw new Error('Failed to find the latest beta version')
       }
 
-      console.log('Step 5. Get download URLs of beta version packages')
+      logger.info('Step 5. Get download URLs of beta version packages')
       const assets = latestBetaVersion.assets
         .filter((asset) => parseTriplet(asset.name)) // Remove non-client packages
-  
-      console.log(`--- Got ${assets.length} items`)
 
-      console.log('Step 6. Create or update version in the database')
+      logger.info(`--- Got ${assets.length} items`)
+
+      logger.info('Step 6. Create or update version in the database')
       const version = await prisma.version.upsert({
         create: {
           display: latestBetaVersion.tag_name,
@@ -80,7 +104,7 @@ export default defineTask({
         }
       })
 
-      console.log('Step 7. Check S3 for existing files')
+      logger.info('Step 7. Check S3 for existing files')
       const listResponse = await ListObjectsV2(mc, 'maaassistantarknights', `MaaAssistantArknights/MaaAssistantArknights/releases/download/${latestBetaVersion.tag_name}/`)
 
       const existingFiles = listResponse.map((item) => {
@@ -94,6 +118,7 @@ export default defineTask({
       const needDownloadAssets = assets.filter((asset) => {
         return asset.size !== existingFiles.find(f => f.name === asset.name)?.size
       })
+
       // 已经存在且大小相同的文件，更新其数据
       const existingAssets = assets.filter((asset) => {
         return asset.size === existingFiles.find(f => f.name === asset.name)?.size
@@ -119,27 +144,36 @@ export default defineTask({
             nodeId: asset.node_id
           },
         })
-        await prisma.packageSync.upsert({
+        const sync = await prisma.packageSync.upsert({
           create: {
             packageId: pkg.id,
-            status: 'COMPLETED',
           },
           update: {
-            status: 'COMPLETED',
           },
           where: {
             packageId: pkg.id,
           }
         })
+        await prisma.job.create({
+          data: {
+            status: 'COMPLETED',
+            syncId: sync.id,
+            taskSlug: 'sync_beta_channel',
+            logFile: `./logs/task_sync_beta_channel/${uuid}.log`,
+            triggeredBy: trigger,
+          }
+        })
       })
 
-      console.log(`--- Already synced ${existingAssets.length} items`)
-      console.log(`--- Need to download ${needDownloadAssets.length} items`)
+      logger.info(`--- Already synced ${existingAssets.length} items`)
+      logger.info(`--- Need to download ${needDownloadAssets.length} items`)
 
-      console.log('Step 8. Create or update packages in the database')
+      logger.info('Step 8. Create or update packages in the database')
       const transferProgress = needDownloadAssets.map((asset) => ({
+        jobId: -1,
         syncId: -1,
         filename: asset.name,
+        browser_download_url: asset.browser_download_url,
         downloaded: false,
         uploaded: false,
         error: false,
@@ -169,55 +203,47 @@ export default defineTask({
         const sync = await prisma.packageSync.upsert({
           create: {
             packageId: pkg.id,
-            status: 'PENDING',
           },
           update: {
-            status: 'PENDING',
           },
           where: {
             packageId: pkg.id,
           }
         })
 
+        const job = await prisma.job.create({
+          data: {
+            status: 'COMPLETED',
+            syncId: sync.id,
+            taskSlug: 'sync_beta_channel',
+            logFile: `./logs/task_sync_beta_channel/${uuid}.log`,
+            triggeredBy: trigger,
+          }
+        })
+
+        transferProgress.find((item) => item.filename === asset.name)!.jobId = job.id
         transferProgress.find((item) => item.filename === asset.name)!.syncId = sync.id
       }
 
-      console.log('Step 9. Transfer packages')
+      logger.info('Step 9. Transfer packages')
       // make sure the directory exists
       const downloadDir = path.join(process.cwd(), `downloads/${version.display}`)
       if (!fs.existsSync(downloadDir)) {
         fs.mkdirSync(downloadDir, { recursive: true })
       }
-      await Promise.all(needDownloadAssets.map((asset) => {
-        return new Promise(async (resolve, reject) => {
-          const pkg = await prisma.package.findUnique({
+      await Promise.all(transferProgress.map((transfer) => {
+        // eslint-disable-next-line no-async-promise-executor
+        return new Promise(async (resolve) => {
+          await prisma.job.update({
             where: {
-              nodeId: asset.node_id,
-            }
-          })
-          if (!pkg) {
-            reject(new Error(`Package not found: ${asset.node_id}`))
-            return
-          }
-          const sync = await prisma.packageSync.findUnique({
-            where: {
-              packageId: pkg.id,
-            }
-          })
-          if (!sync) {
-            reject(new Error(`Package sync not found: ${pkg.id}`))
-            return
-          }
-          await prisma.packageSync.update({
-            where: {
-              id: sync.id,
+              id: transfer.jobId,
             },
             data: {
               status: 'IN_PROGRESS',
             }
           })
           const fileResponse = await $fetch.raw(
-            asset.browser_download_url,
+            transfer.browser_download_url,
             {
               method: 'GET',
               responseType: 'stream',
@@ -227,31 +253,31 @@ export default defineTask({
               dispatcher: HttpProxyAgent,
             }
           )
-          const writeStream = fs.createWriteStream(path.join(downloadDir, asset.name))
+          const writeStream = fs.createWriteStream(path.join(downloadDir, transfer.filename))
           fileResponse.body?.pipeTo(Writable.toWeb(writeStream))
           writeStream.on('finish', async () => {
-            transferProgress.find((item) => item.filename === asset.name)!.downloaded = true
+            transferProgress.find((item) => item.filename === transfer.filename)!.downloaded = true
             resolve(true)
           })
           writeStream.on('error', async (err) => {
-            console.error('Error writing file:', err)
-            await prisma.packageSync.update({
+            logger.error('Error writing file:', err)
+            await prisma.job.update({
               where: {
-                id: sync.id,
+                id: transfer.jobId,
               },
               data: {
                 status: 'ERROR',
               }
             })
-            transferProgress.find((item) => item.filename === asset.name)!.error = true
-            transferProgress.find((item) => item.filename === asset.name)!.errorMessage = err.message
+            transferProgress.find((item) => item.filename === transfer.filename)!.error = true
+            transferProgress.find((item) => item.filename === transfer.filename)!.errorMessage = err.message
             // 防止其他下载任务被终止
             resolve(true)
           })
         })
       }))
 
-      console.log('Step 10. Upload to S3')
+      logger.info('Step 10. Upload to S3')
 
       await Promise.all(transferProgress.filter((transfer) => transfer.downloaded)
         .map(async (transfer) => {
@@ -263,10 +289,10 @@ export default defineTask({
             fs.createReadStream(filePath),
           )
             .then(async () => {
-              console.log(`--- Uploaded ${transfer.filename} to S3`)
-              await prisma.packageSync.update({
+              logger.info(`--- Uploaded ${transfer.filename} to S3`)
+              await prisma.job.update({
                 where: {
-                  id: transfer.syncId,
+                  id: transfer.jobId,
                 },
                 data: {
                   status: 'COMPLETED',
@@ -274,10 +300,10 @@ export default defineTask({
               })
             })
             .catch(async (err) => {
-              console.error('Error uploading file:', err)
-              await prisma.packageSync.update({
+              logger.error('Error uploading file:', err)
+              await prisma.job.update({
                 where: {
-                  id: transfer.syncId,
+                  id: transfer.jobId,
                 },
                 data: {
                   status: 'ERROR',
@@ -287,7 +313,7 @@ export default defineTask({
         }))
 
     } catch (e) {
-      console.error('--- Task Aborted:\n', e)
+      logger.error('--- Task Aborted:\n', e)
       return { result: 'error' }
     }
 
