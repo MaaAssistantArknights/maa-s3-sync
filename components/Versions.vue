@@ -5,7 +5,5 @@
 </template>
 
 <script lang="ts" setup>
-import VersionCard from '~/components/VersionCard.vue';
-
 const channels = ['stable', 'beta']
 </script>

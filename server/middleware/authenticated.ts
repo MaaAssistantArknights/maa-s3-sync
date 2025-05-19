@@ -1,9 +1,11 @@
+import { useRequestURL } from "nuxt/app";
 import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
   const { authorizedRoutes } = useRuntimeConfig()
 
-  if (authorizedRoutes && authorizedRoutes.includes(`${event.node.req.method} ${event.node.req.url}`)) {
+  const requestUrl = new URL(getRequestURL(event))
+  if (authorizedRoutes && authorizedRoutes.includes(`${event.node.req.method} ${requestUrl.pathname}`)) {
 
     // Secret Key Authentication
     const { headers } = event.node.req

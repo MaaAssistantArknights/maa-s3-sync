@@ -14,10 +14,14 @@ export default defineEventHandler(async (event) => {
       sync: {
         package: {
           version: {
-            display: version ? version.toString() : undefined,
+            display: {
+              contains: version ? version.toString() : undefined,
+            },
             channel: Object.keys(VersionChannel).includes(channel?.toString() || '') ? channel?.toString() as VersionChannel : undefined,
           },
-          triplet: triplet ? triplet.toString() : undefined,
+          triplet: {
+            contains: triplet ? triplet.toString() : undefined,
+          },
         }
       }
     },

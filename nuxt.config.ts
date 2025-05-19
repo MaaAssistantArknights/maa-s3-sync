@@ -13,7 +13,7 @@ export default defineNuxtConfig({
       appVersion: 'v1.0.0',
     },
     authorizedRoutes: [
-      'POST /api/job/trigger',
+      'POST /api/task/trigger',
     ]
   },
 
@@ -24,6 +24,7 @@ export default defineNuxtConfig({
     '@nuxt/ui',
     'nuxt-auth-utils',
     '@prisma/nuxt',
+    '@nuxtjs/device',
   ],
 
   nitro: {

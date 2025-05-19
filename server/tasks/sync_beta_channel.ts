@@ -18,6 +18,9 @@ export default defineTask({
   async run({ payload }) {
     const uuid = crypto.randomUUID();
 
+    const s3Bucket = 'maaassistantarknights'
+    const s3Prefix = 'MaaAssistantArknights/MaaAssistantArknights/releases/download'
+
     const trigger = payload.trigger as string | undefined
 
     if (!fs.existsSync(`./logs/task_sync_beta_channel`)) {
@@ -105,7 +108,7 @@ export default defineTask({
       })
 
       logger.info('Step 7. Check S3 for existing files')
-      const listResponse = await ListObjectsV2(mc, 'maaassistantarknights', `MaaAssistantArknights/MaaAssistantArknights/releases/download/${latestBetaVersion.tag_name}/`)
+      const listResponse = await ListObjectsV2(mc, s3Bucket, `${s3Prefix}/${latestBetaVersion.tag_name}/`)
 
       const existingFiles = listResponse.map((item) => {
         return {
@@ -133,12 +136,14 @@ export default defineTask({
             versionId: version.id,
             nodeId: asset.node_id,
             fileName: asset.name,
+            s3Url: `${process.env.S3_ENDPOINT}/${s3Bucket}/${s3Prefix}/${latestBetaVersion.tag_name}/${asset.name}`,
           },
           update: {
             downloadUrl: asset.url,
             triplet: triplet,
             versionId: version.id,
             fileName: asset.name,
+            s3Url: `${process.env.S3_ENDPOINT}/${s3Bucket}/${s3Prefix}/${latestBetaVersion.tag_name}/${asset.name}`,
           },
           where: {
             nodeId: asset.node_id
@@ -161,6 +166,8 @@ export default defineTask({
             taskSlug: 'sync_beta_channel',
             logFile: `./logs/task_sync_beta_channel/${uuid}.log`,
             triggeredBy: trigger,
+            startedAt: new Date(),
+            finishedAt: new Date(),
           }
         })
       })
@@ -189,12 +196,14 @@ export default defineTask({
             versionId: version.id,
             nodeId: asset.node_id,
             fileName: asset.name,
+            s3Url: `${process.env.S3_ENDPOINT}/${s3Bucket}/${s3Prefix}/${latestBetaVersion.tag_name}/${asset.name}`,
           },
           update: {
             downloadUrl: asset.url,
             triplet: triplet,
             versionId: version.id,
             fileName: asset.name,
+            s3Url: `${process.env.S3_ENDPOINT}/${s3Bucket}/${s3Prefix}/${latestBetaVersion.tag_name}/${asset.name}`,
           },
           where: {
             nodeId: asset.node_id,
@@ -213,7 +222,7 @@ export default defineTask({
 
         const job = await prisma.job.create({
           data: {
-            status: 'COMPLETED',
+            status: 'PENDING',
             syncId: sync.id,
             taskSlug: 'sync_beta_channel',
             logFile: `./logs/task_sync_beta_channel/${uuid}.log`,
@@ -240,6 +249,7 @@ export default defineTask({
             },
             data: {
               status: 'IN_PROGRESS',
+              startedAt: new Date(),
             }
           })
           const fileResponse = await $fetch.raw(
@@ -267,6 +277,7 @@ export default defineTask({
               },
               data: {
                 status: 'ERROR',
+                finishedAt: new Date(),
               }
             })
             transferProgress.find((item) => item.filename === transfer.filename)!.error = true
@@ -284,8 +295,8 @@ export default defineTask({
           const filePath = path.join(downloadDir, transfer.filename)
 
           return mc.putObject(
-            'maaassistantarknights',
-            `MaaAssistantArknights/MaaAssistantArknights/releases/download/${latestBetaVersion.tag_name}/${transfer.filename}`,
+            s3Bucket,
+            `${s3Prefix}/${latestBetaVersion.tag_name}/${transfer.filename}`,
             fs.createReadStream(filePath),
           )
             .then(async () => {
@@ -296,6 +307,7 @@ export default defineTask({
                 },
                 data: {
                   status: 'COMPLETED',
+                  finishedAt: new Date(),
                 }
               })
             })
@@ -307,13 +319,15 @@ export default defineTask({
                 },
                 data: {
                   status: 'ERROR',
+                  finishedAt: new Date(),
                 }
               })
             })
         }))
 
     } catch (e) {
-      logger.error('--- Task Aborted:\n', e)
+      logger.error('--- Task Aborted:')
+      logger.error(e)
       return { result: 'error' }
     }
 

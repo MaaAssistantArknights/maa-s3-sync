@@ -656,6 +656,13 @@
   dependencies:
     "@iconify/types" "*"
 
+"@iconify-json/lucide@^1.2.44":
+  version "1.2.44"
+  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@iconify-json/lucide/-/lucide-1.2.44.tgz#698e4cc3ecdcd2e21a51ac24db4c8a7d87a3b63f"
+  integrity sha512-lOwXoOtkFm4Zj1duPj5xqhPKKMUvxVRMfIHi0YDfwLjEEgrhzsJZ4JCpE119L8P8p6zi4on4b9cPZdVXCUuDoQ==
+  dependencies:
+    "@iconify/types" "*"
+
 "@iconify/collections@^1.0.548":
   version "1.0.549"
   resolved "https://registry.yarnpkg.com/@iconify/collections/-/collections-1.0.549.tgz#4a8bc861e614b135aa55a5ef3436572906ac4544"
@@ -1390,6 +1397,13 @@
     pathe "^1.1.2"
     pkg-types "^1.2.1"
     semver "^7.6.3"
+
+"@nuxtjs/device@3.2.4":
+  version "3.2.4"
+  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@nuxtjs/device/-/device-3.2.4.tgz#574a0beefa207fa19fc992d116f731274e710eb4"
+  integrity sha512-jIvN6QeodBNrUrL/1FCHk4bebsiLsGHlJd8c/m2ksLrGY4IZ0npA8IYhDTdYV92epGxoe8+3iZOzCjav+6TshQ==
+  dependencies:
+    defu "^6.1.4"
 
 "@nuxtjs/mdc@0.17.0":
   version "0.17.0"

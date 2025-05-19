@@ -1,23 +1,25 @@
 <template>
   <div class="flex flex-col flex-1 w-full max-w-4xl">
-    <div class="flex justify-around px-4 py-3.5 border-b border-accented">
-      <div class="mr-4">
-        <USelect v-model="channel" :items="channelOptions" label="Channel" />
-      </div>
-      <div class="mr-4">
+    <div class="flex justify-between px-4 py-3.5 border-b border-accented">
+      <div class="space-x-4">
+        <USelect v-model="channel" :items="channelOptions" label="Channel" placeholder="Channel" />
         <UInput v-model="version" label="Version" placeholder="Version" />
-      </div>
-      <div class="mr-4">
         <UInput v-model="triplet" label="Triplet" placeholder="Triplet" />
       </div>
       <UButton class="mr-4" @click="fetchData">Search</UButton>
-      <UPagination :page="page" :pageSize="pageSize" :total="total" :sibling-count="1" @update:page="onChangePage" />
     </div>
-    <UTable :columns="columns" :data="data" :loading="loading" sticky :rowKey="'id'" @rowClick="onRowClick" />
+    <UTable :columns="columns" :data="data" :loading="loading" sticky :rowKey="'id'" />
+    <div class="flex justify-end">
+      <UPagination class="float-right" :page="page" :pageSize="pageSize" :total="total" :sibling-count="1"
+        @update:page="onChangePage" />
+    </div>
   </div>
 </template>
 
 <script lang="ts" setup>
+import { JobDetailSlideover, JobLogSlideover } from '#components';
+import { statusBadgeColor } from '~/shared/constants/colors';
+
 import type { TableColumn } from '@nuxt/ui';
 import type { Version, Package, PackageSync, Job, VersionChannel } from '@prisma/client';
 import type { Row } from '@tanstack/vue-table';
@@ -40,6 +42,9 @@ type ResponseType = {
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
+const UBadge = resolveComponent('UBadge')
+
+const overlay = useOverlay()
 
 // loading
 const loading = ref(false)
@@ -55,7 +60,7 @@ function onChangePage(newPage: number) {
 }
 
 // filter
-const channel = ref<VersionChannel>('STABLE')
+const channel = ref<VersionChannel | undefined>()
 const channelOptions: Array<{ label: string, value: VersionChannel }> = [
   { label: 'Stable', value: 'STABLE' },
   { label: 'Beta', value: 'BETA' },
@@ -106,6 +111,14 @@ const columns: TableColumn<DataType>[] = [
   {
     accessorKey: 'status',
     header: 'Status',
+    cell: ({ getValue }) => {
+      const status = getValue() as string
+      return h(
+        UBadge,
+        { color: statusBadgeColor[status], variant: 'subtle', class: 'mr-2' },
+        () => status
+      )
+    }
   },
   {
     accessorKey: 'updatedAt',
@@ -147,32 +160,28 @@ function getRowItems(row: Row<DataType>) {
       label: 'Actions'
     },
     {
-      label: 'Copy payment ID',
+      label: 'Show Job Details',
       onSelect() {
-        // navigator.clipboard.writeText(row.original.id)
-
-        // toast.add({
-        //   title: 'Payment ID copied to clipboard!',
-        //   color: 'success',
-        //   icon: 'i-lucide-circle-check'
-        // })
+        const slideover = overlay.create(JobDetailSlideover, {
+          props: {
+            job: row.original
+          }
+        })
+        slideover.open()
       }
     },
     {
-      type: 'separator'
+      label: 'Show Job Log',
+      onSelect() {
+        const slideover = overlay.create(JobLogSlideover, {
+          props: {
+            job: row.original
+          }
+        })
+        slideover.open()
+      }
     },
-    {
-      label: 'View customer'
-    },
-    {
-      label: 'View payment details'
-    }
   ]
-}
-
-// interaction
-function onRowClick(row: DataType) {
-  // Handle row click
 }
 
 // on mounted
@@ -180,5 +189,3 @@ onMounted(() => {
   fetchData()
 })
 </script>
-
-<style></style>
