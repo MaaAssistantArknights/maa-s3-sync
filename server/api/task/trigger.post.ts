@@ -15,7 +15,7 @@ export default defineEventHandler(async (event) => {
 
   const { task_name } = { ...getQuery(event) };
   if (!task_name) {
-    return sendError(event, createError({ statusCode: 400, statusMessage: 'Task name is required' }))
+    return sendError(event, createError({ statusCode: 400, message: 'Task name is required' }))
   }
   runTask(task_name.toString(), { payload: { trigger: triggeredBy } })
   return { message: 'Task triggered' }

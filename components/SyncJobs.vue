@@ -125,7 +125,7 @@ const columns: TableColumn<DataType>[] = [
     accessorKey: 'updatedAt',
     header: 'Sync Time',
     cell: ({ getValue }) => {
-      return h(NuxtTime, { dateStyle: 'long', timeStyle: 'medium' }, getValue)
+      return h(NuxtTime, { dateStyle: 'long', timeStyle: 'medium', datetime: getValue() })
     }
   },
   {

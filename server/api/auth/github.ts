@@ -16,14 +16,14 @@ export default defineOAuthGitHubEventHandler({
     if (state !== 'active') {
       return sendError(event, createError({
         statusCode: 403,
-        statusMessage: 'You are not an active member of the MaaAssistantArknights organization.',
+        message: 'You are not an active member of the MaaAssistantArknights organization.',
       }));
     }
 
     if (role !== 'admin') {
       return sendError(event, createError({
         statusCode: 403,
-        statusMessage: 'You are not an admin of the MaaAssistantArknights organization.',
+        message: 'You are not an admin of the MaaAssistantArknights organization.',
       }));
     }
 

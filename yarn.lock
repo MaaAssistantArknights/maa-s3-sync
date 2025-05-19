@@ -2765,7 +2765,7 @@
   resolved "https://registry.yarnpkg.com/@vue/shared/-/shared-3.5.14.tgz#8fcdc6c69661a1163c173cafb6129c3f8ad01122"
   integrity sha512-oXTwNxVfc9EtP1zzXAlSlgARLXNC84frFYkS0HHz0h3E4WZSP9sywqjqzGCP9Y34M8ipNmd380pVgmMuwELDyQ==
 
-"@vueuse/core@13.2.0", "@vueuse/core@^13.2.0":
+"@vueuse/core@13.2.0":
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.2.0.tgz#f19afa06449110ff3a649ea06b661c3c37c43c34"
   integrity sha512-n5TZoIAxbWAQ3PqdVPDzLgIRQOujFfMlatdI+f7ditSmoEeNpPBvp7h2zamzikCmrhFIePAwdEQB6ENccHr7Rg==
@@ -2794,6 +2794,15 @@
     "@vueuse/shared" "12.8.2"
     vue "^3.5.13"
 
+"@vueuse/core@^13.2.0":
+  version "13.2.0"
+  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@vueuse/core/-/core-13.2.0.tgz#f19afa06449110ff3a649ea06b661c3c37c43c34"
+  integrity sha512-n5TZoIAxbWAQ3PqdVPDzLgIRQOujFfMlatdI+f7ditSmoEeNpPBvp7h2zamzikCmrhFIePAwdEQB6ENccHr7Rg==
+  dependencies:
+    "@types/web-bluetooth" "^0.0.21"
+    "@vueuse/metadata" "13.2.0"
+    "@vueuse/shared" "13.2.0"
+
 "@vueuse/integrations@^13.2.0":
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/@vueuse/integrations/-/integrations-13.2.0.tgz#d09ca17fd5a7c5b31e2389dec363154afe514e43"
@@ -2816,6 +2825,16 @@
   version "13.2.0"
   resolved "https://registry.yarnpkg.com/@vueuse/metadata/-/metadata-13.2.0.tgz#a839028d43c3206b674dd1d59a77b9c80f4d9d5f"
   integrity sha512-kPpzuQCU0+D8DZCzK0iPpIcXI+6ufWSgwnjJ6//GNpEn+SHViaCtR+XurzORChSgvpHO9YC8gGM97Y1kB+UabA==
+
+"@vueuse/nuxt@^13.2.0":
+  version "13.2.0"
+  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@vueuse/nuxt/-/nuxt-13.2.0.tgz#9f34b5e160ca68bd345828f04579af3db123a9c6"
+  integrity sha512-vLEyR2njEpugSOi12SuWwrClFxXrG/X20XExvkdHhIZ2R5qhm3wbmThUmHZ9K8AJI1+Y1m/qJUzmrac2FtLreA==
+  dependencies:
+    "@nuxt/kit" "^3.17.3"
+    "@vueuse/core" "13.2.0"
+    "@vueuse/metadata" "13.2.0"
+    local-pkg "^1.1.1"
 
 "@vueuse/shared@10.11.1":
   version "10.11.1"

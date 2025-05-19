@@ -61,6 +61,7 @@ const { channel, version } = defineProps({
 
 type VersionResponse = Version & {
   packages: (Package & {
+    version: Version
     sync: PackageSync & {
       jobs: Job[]
     }

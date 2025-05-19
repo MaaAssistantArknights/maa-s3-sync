@@ -3,10 +3,10 @@ import fs from "fs"
 import prisma from "~/lib/prisma"
 
 export default defineEventHandler(async (event) => {
-  if (/^\d+$/.test(event.context.params!.id)) {
+  if (!/^[0-9]+$/.test(event.context.params!.id)) {
     throw createError({
       statusCode: 400,
-      statusMessage: 'Invalid ID',
+      message: "Invalid job ID format. Please provide a valid numeric ID.",
     })
   }
   const id = parseInt(event.context.params!.id)
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
   if (!job || !job.logFile) {
     throw createError({
       statusCode: 404,
-      statusMessage: 'Log file not found',
+      message: "Job not found or log file does not exist",
     })
   }
 

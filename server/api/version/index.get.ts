@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     if (!version) {
       return createError({
         statusCode: 400,
-        statusMessage: "Version not exists",
+        message: "Version not exists",
       });
     }
 
@@ -47,6 +47,7 @@ export default defineEventHandler(async (event) => {
     include: {
       packages: {
         include: {
+          version: true,
           sync: {
             include: {
               jobs: {

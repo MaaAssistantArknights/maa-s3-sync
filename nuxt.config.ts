@@ -25,6 +25,7 @@ export default defineNuxtConfig({
     'nuxt-auth-utils',
     '@prisma/nuxt',
     '@nuxtjs/device',
+    '@vueuse/nuxt',
   ],
 
   nitro: {
