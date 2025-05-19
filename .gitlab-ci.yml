@@ -17,6 +17,23 @@ build-and-push:
     - |
       cat <<EOF > /etc/containers/registries.conf
       unqualified-search-registries = ["docker.io"]
+      
+      [[registry]]
+      prefix = "docker.io"
+      location = "oci.home.chingc.cc"
+
+      [[registry]]
+      prefix = "ghcr.io"
+      location = "oci.home.chingc.cc"
+
+      [[registry]]
+      prefix = "gcr.io"
+      location = "oci.home.chingc.cc"
+
+      [[registry]]
+      prefix = "quay.io"
+      location = "oci.home.chingc.cc"
+
       [[registry.mirror]]
       location = "oci.home.chingc.cc"
       EOF
