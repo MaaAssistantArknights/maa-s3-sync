@@ -43,6 +43,7 @@ type ResponseType = {
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
 const UBadge = resolveComponent('UBadge')
+const NuxtTime = resolveComponent('NuxtTime')
 
 const overlay = useOverlay()
 
@@ -123,6 +124,9 @@ const columns: TableColumn<DataType>[] = [
   {
     accessorKey: 'updatedAt',
     header: 'Sync Time',
+    cell: ({ getValue }) => {
+      return h(NuxtTime, { dateStyle: 'long', timeStyle: 'medium' }, getValue)
+    }
   },
   {
     id: 'actions',

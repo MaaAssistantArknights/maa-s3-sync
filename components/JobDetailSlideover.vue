@@ -15,7 +15,7 @@
           <span>{{ job.sync.package.triplet }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>File Name:</strong>
+          <strong>File:</strong>
           <span>{{ job.sync.package.fileName }}</span>
         </div>
         <div class="flex justify-between">
