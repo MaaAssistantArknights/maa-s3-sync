@@ -658,7 +658,7 @@
 
 "@iconify-json/lucide@^1.2.44":
   version "1.2.44"
-  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@iconify-json/lucide/-/lucide-1.2.44.tgz#698e4cc3ecdcd2e21a51ac24db4c8a7d87a3b63f"
+  resolved "https://registry.yarnpkg.com/@iconify-json/lucide/-/lucide-1.2.44.tgz#698e4cc3ecdcd2e21a51ac24db4c8a7d87a3b63f"
   integrity sha512-lOwXoOtkFm4Zj1duPj5xqhPKKMUvxVRMfIHi0YDfwLjEEgrhzsJZ4JCpE119L8P8p6zi4on4b9cPZdVXCUuDoQ==
   dependencies:
     "@iconify/types" "*"
@@ -1400,7 +1400,7 @@
 
 "@nuxtjs/device@3.2.4":
   version "3.2.4"
-  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@nuxtjs/device/-/device-3.2.4.tgz#574a0beefa207fa19fc992d116f731274e710eb4"
+  resolved "https://registry.yarnpkg.com/@nuxtjs/device/-/device-3.2.4.tgz#574a0beefa207fa19fc992d116f731274e710eb4"
   integrity sha512-jIvN6QeodBNrUrL/1FCHk4bebsiLsGHlJd8c/m2ksLrGY4IZ0npA8IYhDTdYV92epGxoe8+3iZOzCjav+6TshQ==
   dependencies:
     defu "^6.1.4"
@@ -2796,7 +2796,7 @@
 
 "@vueuse/core@^13.2.0":
   version "13.2.0"
-  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@vueuse/core/-/core-13.2.0.tgz#f19afa06449110ff3a649ea06b661c3c37c43c34"
+  resolved "https://registry.yarnpkg.com/@vueuse/core/-/core-13.2.0.tgz#f19afa06449110ff3a649ea06b661c3c37c43c34"
   integrity sha512-n5TZoIAxbWAQ3PqdVPDzLgIRQOujFfMlatdI+f7ditSmoEeNpPBvp7h2zamzikCmrhFIePAwdEQB6ENccHr7Rg==
   dependencies:
     "@types/web-bluetooth" "^0.0.21"
@@ -2828,7 +2828,7 @@
 
 "@vueuse/nuxt@^13.2.0":
   version "13.2.0"
-  resolved "https://nexus.home.chingc.cc/repository/npm-npmjs/@vueuse/nuxt/-/nuxt-13.2.0.tgz#9f34b5e160ca68bd345828f04579af3db123a9c6"
+  resolved "https://registry.yarnpkg.com/@vueuse/nuxt/-/nuxt-13.2.0.tgz#9f34b5e160ca68bd345828f04579af3db123a9c6"
   integrity sha512-vLEyR2njEpugSOi12SuWwrClFxXrG/X20XExvkdHhIZ2R5qhm3wbmThUmHZ9K8AJI1+Y1m/qJUzmrac2FtLreA==
   dependencies:
     "@nuxt/kit" "^3.17.3"
