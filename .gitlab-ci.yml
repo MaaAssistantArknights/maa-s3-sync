@@ -14,8 +14,8 @@ build-and-push:
       exists:                         # 且存在Dockerfile时执行
         - Dockerfile
   script:
-
-    - cat <<EOF > /etc/containers/registries.conf
+    - |
+      cat <<EOF > /etc/containers/registries.conf
       unqualified-search-registries = ["docker.io"]
       [[registry.mirror]]
       location = "oci.home.chingc.cc"
