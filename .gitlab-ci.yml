@@ -5,29 +5,25 @@ variables:
   HARBOR_URL: "harbor.home.chingc.cc"   # 修改为您的Harbor地址
   HARBOR_PROJECT: "library"     # 修改为您的Harbor项目名称
   IMAGE_NAME: "maa-sync"           # 修改为您的镜像名称
-  DOCKER_HOST: "unix:///run/podman/podman.sock"  # 强制使用 Podman
-  STORAGE_DRIVER: "overlay"                      # Podman 默认存储驱动
 
 build-and-push:
   stage: build
   image: docker:latest
   services:
     - name: quay.io/podman/stable                # 使用 Podman 代替 Docker dind
-      command: ["--storage-driver=overlay"]      # 指定存储驱动
   rules:
     - if: $CI_COMMIT_TAG             # 仅在推送tag时触发
       exists:                         # 且存在Dockerfile时执行
         - Dockerfile
   script:
-    - alias docker=podman || true
     # 登录Harbor
-    - docker login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_URL
+    - podman login -u $HARBOR_USER -p $HARBOR_PASSWORD $HARBOR_URL
 
     # 构建镜像并打双标签
-    - docker build -t $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_TAG -t $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:latest .
+    - podman build -t $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_TAG -t $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:latest .
 
     # 推送带git tag的镜像
-    - docker push $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_TAG
+    - podman push $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:$CI_COMMIT_TAG
     
     # 推送latest镜像
-    - docker push $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:latest
+    - podman push $HARBOR_URL/$HARBOR_PROJECT/$IMAGE_NAME:latest
