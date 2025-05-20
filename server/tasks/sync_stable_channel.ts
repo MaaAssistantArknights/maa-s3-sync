@@ -3,6 +3,7 @@ import path from 'path';
 import { Writable } from 'stream';
 import * as Minio from 'minio';
 import pino from 'pino'
+import 'pino-pretty'
 
 import prisma from "~/lib/prisma";
 import sfetch from '~/server/utils/server_fetch'
