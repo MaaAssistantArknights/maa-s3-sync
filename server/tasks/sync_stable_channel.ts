@@ -296,7 +296,7 @@ export default defineTask({
           const filePath = path.join(downloadDir, transfer.filename)
 
           return mc.putObject(
-            s3Prefix,
+            s3Bucket,
             `${s3Prefix}/${latestStableVersion.tag_name}/${transfer.filename}`,
             fs.createReadStream(filePath),
           )
