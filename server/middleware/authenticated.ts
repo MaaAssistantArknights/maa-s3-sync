@@ -1,4 +1,3 @@
-import { useRequestURL } from "nuxt/app";
 import prisma from "~/lib/prisma";
 
 export default defineEventHandler(async (event) => {
@@ -12,6 +11,7 @@ export default defineEventHandler(async (event) => {
     const authHeader = headers['authorization'] || headers['Authorization'] as string
     if (authHeader) {
       const token = authHeader.split(' ')[1]
+      console.log('Token:', token)
       if (token) {
         const secretKey = await prisma.secretKey.findFirst({
           where: {
@@ -30,6 +30,8 @@ export default defineEventHandler(async (event) => {
         })
         if (!secretKey) {
           return sendError(event, createError({ statusCode: 401, statusMessage: 'Unauthorized' }))
+        } else {
+          return
         }
       }
     }

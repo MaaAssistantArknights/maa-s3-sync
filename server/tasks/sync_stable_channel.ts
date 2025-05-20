@@ -312,7 +312,8 @@ export default defineTask({
               })
             })
             .catch(async (err) => {
-              logger.error('Error uploading file:', err)
+              logger.error('Error uploading file:')
+              logger.error(err)
               await prisma.job.update({
                 where: {
                   id: transfer.jobId,
