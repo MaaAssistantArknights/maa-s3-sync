@@ -4,8 +4,6 @@ WORKDIR /app
 # Copy package.json and your lockfile, here we add pnpm-lock.yaml for illustration
 COPY package.json yarn.lock ./
 
-RUN sed -i 's/https:\/\/registry.yarnpkg.com/https:\/\/nexus.home.chingc.cc\/repository\/npm-npmjs/g' yarn.lock
-
 # Install dependencies
 RUN yarn install --frozen-lockfile
 
