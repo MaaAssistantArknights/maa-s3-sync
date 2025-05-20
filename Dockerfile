@@ -20,7 +20,13 @@ WORKDIR /app
 
 # Only `.output` folder is needed from the build stage
 COPY --from=build /app/.output/ ./
+COPY prisma /app/prisma/
+
+COPY docker-entrypoint.sh /app/
+RUN chmod +x /app/docker-entrypoint.sh
 
 EXPOSE 3000/tcp
+
+ENTRYPOINT ["/app/docker-entrypoint.sh"]
 
 CMD ["node", "/app/server/index.mjs"]
