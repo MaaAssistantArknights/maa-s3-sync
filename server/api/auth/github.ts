@@ -1,3 +1,5 @@
+import { HttpProxyAgent } from "~/server/utils/request_proxy"
+
 export default defineOAuthGitHubEventHandler({
   async onSuccess(event, { user, tokens }) {
     const { access_token } = tokens;
@@ -9,8 +11,9 @@ export default defineOAuthGitHubEventHandler({
       {
         headers: {
           Authorization: `Bearer ${access_token}`,
-        }
-      }
+        },
+        dispatcher: HttpProxyAgent,
+      },
     )
     const { role, state } = response;
     if (state !== 'active') {
