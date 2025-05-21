@@ -4,7 +4,7 @@
       "team_member_link": "我是MAA Team成员"
     },
     "Login": {
-      "title": "MAA 同步仪表盘",
+      "title": "MAA Sync Dashboard",
       "description": "登录仪表盘",
       "tip": "确保您是MAA Team的管理员",
       "github": "使用 GitHub 登录",
