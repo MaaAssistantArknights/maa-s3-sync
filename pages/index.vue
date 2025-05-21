@@ -11,6 +11,10 @@
 import versions from '~/components/Versions.vue'
 import syncjobs from '~/components/SyncJobs.vue'
 
+useHead({
+  title: 'MAA Sync Status',
+})
+
 const { loggedIn } = useUserSession()
 
 const tabs = {

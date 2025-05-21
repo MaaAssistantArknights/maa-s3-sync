@@ -27,6 +27,10 @@
 </template>
 
 <script setup lang="ts">
+useHead({
+  title: 'MAA Sync Status - Login',
+})
+
 definePageMeta({
   layout: 'slim',
 })
