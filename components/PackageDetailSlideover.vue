@@ -25,12 +25,12 @@
         <div class="flex justify-between">
           <strong>{{ $t('Components.PackageDetailSlideover.last_sync_started_at') }}:</strong>
           <span v-if="!package.sync.jobs[0].startedAt">N/A</span>
-          <NuxtTime v-else :datetime="package.sync.jobs[0].startedAt" dateStyle="long" timeStyle="medium" />
+          <NuxtTime v-else :datetime="package.sync.jobs[0].startedAt" :locale="locale.iso as string" dateStyle="long" timeStyle="medium" />
         </div>
         <div class="flex justify-between">
           <strong>{{ $t('Components.PackageDetailSlideover.last_sync_finished_at') }}:</strong>
           <span v-if="!package.sync.jobs[0].finishedAt">N/A</span>
-          <NuxtTime v-else :datetime="package.sync.jobs[0].finishedAt" dateStyle="long" timeStyle="medium" />
+          <NuxtTime v-else :datetime="package.sync.jobs[0].finishedAt" :locale="locale.iso as string" dateStyle="long" timeStyle="medium" />
         </div>
       </div>
       <USeparator class="my-4" color="secondary" />
@@ -48,9 +48,10 @@
 </template>
 
 <script lang="ts" setup>
-import { statusBadgeColor } from '~/shared/constants/colors';
-
 import type { Version, Package, PackageSync, Job } from '@prisma/client';
+
+import { statusBadgeColor } from '~/shared/constants/colors';
+import useCurrentLocale from '~/utils/useCurrentLocale';
 
 const props = defineProps<{
   package: Package & {
@@ -63,6 +64,7 @@ const props = defineProps<{
 
 const toast = useToast();
 const { t: $t } = useI18n();
+const locale = useCurrentLocale();
 
 function downloadFile() {
   const s3Url = props.package.s3Url;

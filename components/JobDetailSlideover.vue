@@ -31,12 +31,12 @@
         <div class="flex justify-between">
           <strong>{{ $t('Components.JobDetailSlideover.started_at') }}:</strong>
           <span v-if="!job.startedAt">N/A</span>
-          <NuxtTime v-else :datetime="job.startedAt" dateStyle="long" timeStyle="medium" />
+          <NuxtTime v-else :datetime="job.startedAt" :locale="locale.iso as string" dateStyle="long" timeStyle="medium" />
         </div>
         <div class="flex justify-between">
           <strong>{{ $t('Components.JobDetailSlideover.finished_at') }}:</strong>
           <span v-if="!job.finishedAt">N/A</span>
-          <NuxtTime v-else :datetime="job.finishedAt" dateStyle="long" timeStyle="medium" />
+          <NuxtTime v-else :datetime="job.finishedAt" :locale="locale.iso as string" dateStyle="long" timeStyle="medium" />
         </div>
       </div>
       <USeparator class="my-4" color="secondary" />
@@ -66,11 +66,12 @@
 <script lang="ts" setup>
 import { JobLogSlideover } from '#components';
 
-import { statusBadgeColor } from '~/shared/constants/colors';
-
 import type { Version, Package, PackageSync, Job } from '@prisma/client';
 
+import useCurrentLocale from '~/utils/useCurrentLocale';
+
 const overlay = useOverlay();
+const locale = useCurrentLocale();
 
 const props = defineProps<{
   job: Job & {

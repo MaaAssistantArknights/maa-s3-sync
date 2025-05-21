@@ -14,8 +14,11 @@
               {{ info?.display }}
             </span>
             <span class="text-sm text-neutral-500">
-              {{ $t('Components.VersionCard.released_at') }} <NuxtTime :datetime="info.releaseDate" relative :locale="currentLocale?.iso" />
-              (<NuxtTime :datetime="info.releaseDate" style="long" />)
+              {{ $t('Components.VersionCard.released_at') }}
+              <NuxtTime :datetime="info.releaseDate" relative :locale="locale.iso as string" />
+              (
+                <NuxtTime :datetime="info.releaseDate" style="long" :locale="locale.iso as string" />
+              )
             </span>
           </div>
           <div>
@@ -23,9 +26,7 @@
           </div>
         </div>
         <div class="flex flex-col h-full items-center justify-around space-y-2">
-          <UDropdownMenu 
-            arrow
-            :items="downloadMenu">
+          <UDropdownMenu arrow :items="downloadMenu">
             <UButton icon="lucide:cloud-download" size="md" color="primary" variant="solid" />
           </UDropdownMenu>
           <div v-if="loggedIn">
@@ -40,9 +41,11 @@
 </template>
 
 <script lang="ts" setup>
+import type { DropdownMenuItem } from '@nuxt/ui'
+
 import { channelEmoji } from '~/shared/constants/emojis'
 import type { Version, Package, PackageSync, Job } from '~/shared/types/schema'
-import type { DropdownMenuItem } from '@nuxt/ui'
+import useCurrentLocale from '~/utils/useCurrentLocale'
 
 const { loggedIn } = useUserSession()
 
@@ -59,9 +62,8 @@ const { channel, version } = defineProps({
   },
 })
 
-const { t: $t, locale, locales } = useI18n()
-
-const currentLocale = locales.value.find(l => l.code === locale.value)
+const { t: $t } = useI18n()
+const locale = useCurrentLocale()
 
 type VersionResponse = Version & {
   packages: (Package & {

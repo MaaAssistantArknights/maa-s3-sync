@@ -18,7 +18,7 @@
 
 <script lang="ts" setup>
 import { JobDetailSlideover, JobLogSlideover } from '#components';
-import { statusBadgeColor } from '~/shared/constants/colors';
+import useCurrentLocale from '~/utils/useCurrentLocale';
 
 import type { TableColumn } from '@nuxt/ui';
 import type { Version, Package, PackageSync, Job, VersionChannel } from '@prisma/client';
@@ -47,6 +47,7 @@ const NuxtTime = resolveComponent('NuxtTime')
 
 const overlay = useOverlay()
 const { t: $t } = useI18n()
+const locale = useCurrentLocale()
 
 // loading
 const loading = ref(false)
@@ -126,7 +127,12 @@ const columns: TableColumn<DataType>[] = [
     accessorKey: 'updatedAt',
     header: $t('Components.SyncJobs.sync_time'),
     cell: ({ getValue }) => {
-      return h(NuxtTime, { dateStyle: 'long', timeStyle: 'medium', datetime: getValue() })
+      return h(NuxtTime, { 
+        dateStyle: 'long', 
+        timeStyle: 'medium', 
+        datetime: getValue(), 
+        locale: locale.iso as string
+      })
     }
   },
   {
