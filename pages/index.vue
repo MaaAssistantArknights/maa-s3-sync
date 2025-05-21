@@ -2,7 +2,7 @@
   <div class="flex flex-col w-full h-full justify-between items-center flex-1">
     <component :is="tabs[active]" />
     <div v-if="!loggedIn" class="text-center underline my-4">
-      <ULink to="/login">I'm a member of MAA Team</ULink>
+      <ULink to="/login">{{ $t('Pages.Index.team_member_link') }}</ULink>
     </div>
   </div>
 </template>

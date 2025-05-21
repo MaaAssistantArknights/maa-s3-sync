@@ -1,0 +1,75 @@
+{
+  "Pages": {
+    "Index": {
+      "team_member_link": "I'm a member of MAA Team"
+    },
+    "Login": {
+      "title": "MAA Sync Dashboard",
+      "description": "Sign in to dashboard",
+      "tip": "Make sure you are administrator of the MAA Team.",
+      "github": "Sign in with GitHub",
+      "account": "Sign in with MAA account"
+    }
+  },
+  "Components": {
+    "JobDetailSlideover": {
+      "title": "Job #{0}",
+      "triggered_by": "Triggered by",
+      "started_at": "Started at",
+      "finished_at": "Finished at",
+      "show_job_log": "Show job log"
+    },
+    "JobLogSlideover": {
+      "title": "Log for Job #{0}",
+      "auto_refresh": "Auto refresh",
+      "auto_scroll": "Auto scroll"
+    },
+    "NavigationMenu": {
+      "versions": "Versions",
+      "syncjobs": "Sync Jobs"
+    },
+    "PackageDetailSlideover": {
+      "title": "Package {0}",
+      "last_sync_started_at": "Last sync started at",
+      "last_sync_finished_at": "Last sync finished at",
+      "copy_link": "Copy link",
+      "copy_link_success": "Link copied to clipboard",
+      "copy_link_fail": "Failed to copy link"
+    },
+    "SyncJobs": {
+      "show_job_detail": "Show job detail",
+      "show_job_log": "Show job log",
+      "sync_time": "Sync Time"
+    },
+    "VersionCard": {
+      "not_synced": "Not synced",
+      "released_at": "Released",
+      "sync_now": "Sync now",
+      "all_platforms": "All platforms",
+      "recommanded": "Recommended"
+    }
+  },
+  "Common": {
+    "channel": "Channel",
+    "search": "Search",
+    "version": "Version",
+    "triplet": "Triplet",
+    "status": "Status",
+    "actions": "Actions",
+    "job": "Job",
+    "file": "File",
+    "download": "Download",
+    "Version": {
+      "stable": "Stable",
+      "STABLE": "Stable",
+      "beta": "Beta",
+      "BETA": "Beta"
+    },
+    "Status": {
+      "PENDING": "Pending",
+      "IN_PROGRESS": "In Progress",
+      "COMPLETED": "Completed",
+      "ERROR": "Error"
+    }
+  }
+}

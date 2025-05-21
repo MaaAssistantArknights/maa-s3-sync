@@ -4,23 +4,23 @@
       <ULink href="/" aria-label="Home">
         <img src="/images/icon.png" class="h-10 w-auto" />
       </ULink>
-      <h1 class="ml-4 text-2xl font-bold">MAA Sync Dashboard</h1>
+      <h1 class="ml-4 text-2xl font-bold">{{ $t('Pages.Login.title') }}</h1>
     </div>
     <h2 class="mt-12 text-lg font-semibold">
-      Sign in to dashboard
+      {{ $t('Pages.Login.description') }}
     </h2>
     <p class="mt-2 text-sm">
-      Make sure you are administrator of the MAA Team.
+      {{ $t('Pages.Login.tip') }}
     </p>
     <div class="my-4">
       <UButton class="w-full justify-center" icon="grommet-icons:github" :to="`${origin}/api/auth/github`">
-        Sign in with GitHub
+        {{ $t('Pages.Login.github') }}
       </UButton>
     </div>
     <USeparator color="secondary" label="or" />
     <div class="mt-4">
       <UButton class="w-full justify-center" icon="fluent:person-arrow-right-24-filled" :to="`${origin}/api/auth/authentik`">
-        Sign in with MAA Account
+        {{ $t('Pages.Login.account') }}
       </UButton>
     </div>
   </div>

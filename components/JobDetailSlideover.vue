@@ -1,40 +1,40 @@
 <template>
-  <USlideover :title="`Job #${job.id}`">
+  <USlideover :title="$t('Components.JobDetailSlideover.title', [job.id])">
     <template #body>
       <div class="space-y-2">
         <div class="flex justify-between">
-          <strong>Version:</strong>
+          <strong>{{ $t('Common.version') }}:</strong>
           <span>{{ job.sync.package.version.display }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Channel:</strong>
+          <strong>{{ $t('Common.channel') }}:</strong>
           <span>{{ job.sync.package.version.channel }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Triplet:</strong>
+          <strong>{{ $t('Common.triplet') }}:</strong>
           <span>{{ job.sync.package.triplet }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>File:</strong>
+          <strong>{{ $t('Common.file') }}:</strong>
           <span>{{ job.sync.package.fileName }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Status:</strong>
-          <UBadge variant="subtle" :color="statusBadgeColor[job.status]">{{ job.status }}</UBadge>
+          <strong>{{ $t('Common.status') }}:</strong>
+          <StatusBadge :status="job.status" />
         </div>
         <div class="flex justify-between">
-          <strong>Triggered By:</strong>
+          <strong>{{ $t('Components.JobDetailSlideover.triggered_by') }}:</strong>
           <UBadge color="neutral" variant="subtle" :leadingIcon="job.triggeredBy.startsWith('*') ? 'lucide:settings': 'lucide:user-round'">
             {{ job.triggeredBy.replaceAll('*', '') }}
           </UBadge>
         </div>
         <div class="flex justify-between">
-          <strong>Started At:</strong>
+          <strong>{{ $t('Components.JobDetailSlideover.started_at') }}:</strong>
           <span v-if="!job.startedAt">N/A</span>
           <NuxtTime v-else :datetime="job.startedAt" dateStyle="long" timeStyle="medium" />
         </div>
         <div class="flex justify-between">
-          <strong>Finished At:</strong>
+          <strong>{{ $t('Components.JobDetailSlideover.finished_at') }}:</strong>
           <span v-if="!job.finishedAt">N/A</span>
           <NuxtTime v-else :datetime="job.finishedAt" dateStyle="long" timeStyle="medium" />
         </div>
@@ -47,7 +47,7 @@
           icon="lucide:bug"
           @click="showJobLog"
         >
-          Show Job Log
+          {{ $t('Components.JobDetailSlideover.show_job_log') }}
         </UButton>
         <UButton
           v-if="job.sync.package.s3Url"
@@ -56,7 +56,7 @@
           icon="lucide:cloud-download"
           @click="downloadFile"
         >
-          Download
+          {{ $t('Common.download') }}
         </UButton>
       </div>
     </template>

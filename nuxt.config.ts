@@ -10,7 +10,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      appVersion: 'v1.0.0',
+      appVersion: 'v1.1.0',
     },
     authorizedRoutes: [
       'POST /api/task/trigger',
@@ -26,6 +26,7 @@ export default defineNuxtConfig({
     '@prisma/nuxt',
     '@nuxtjs/device',
     '@vueuse/nuxt',
+    '@nuxtjs/i18n',
   ],
 
   nitro: {
@@ -42,4 +43,10 @@ export default defineNuxtConfig({
       },
     },
   },
+  i18n: {
+    locales: [
+      { code: 'en', name: 'English', iso: 'en-US', file: 'en-US.json' },
+      { code: 'zh', name: '简体中文', iso: 'zh-CN', file: 'zh-CN.json' },
+    ],
+  }
 })

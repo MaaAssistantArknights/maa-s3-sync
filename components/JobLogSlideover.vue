@@ -1,15 +1,15 @@
 <template>
-  <USlideover :title="`Log for Job #${job.id}`" class="max-w-3xl"
+  <USlideover :title="$t('Components.JobLogSliderover.title', [job.id])" class="max-w-3xl"
     :ui="{ body: 'flex flex-col flex-1 overflow-y-auto p-4 sm:p-6' }">
     <template #body>
       <div class="flex justify-end space-x-2">
         <UButton :loading="loading" color="primary" :variant="autoRefresh ? 'solid' : 'subtle'"
           icon="lucide:refresh-ccw" loading-icon="lucide:refresh-ccw" @click="autoRefresh = !autoRefresh">
-          Auto Refresh
+          {{ $t('Components.JobLogSlideover.auto_refresh') }}
         </UButton>
         <UButton color="primary" :variant="autoScroll ? 'solid' : 'subtle'" icon="rivet-icons:page-bottom"
           @click="autoScroll = !autoScroll">
-          Auto Scroll
+          {{ $t('Components.JobLogSlideover.auto_scroll') }}
         </UButton>
       </div>
       <div class="flex-1 overflow-y-auto" ref="logEl">

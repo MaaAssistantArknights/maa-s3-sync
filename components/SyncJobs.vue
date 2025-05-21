@@ -2,11 +2,11 @@
   <div class="flex flex-col flex-1 w-full max-w-4xl">
     <div class="flex justify-between px-4 py-3.5 border-b border-accented">
       <div class="space-x-4">
-        <USelect v-model="channel" :items="channelOptions" label="Channel" placeholder="Channel" />
-        <UInput v-model="version" label="Version" placeholder="Version" />
-        <UInput v-model="triplet" label="Triplet" placeholder="Triplet" />
+        <USelect v-model="channel" :items="channelOptions" :label="$t('Common.channel')" :placeholder="$t('Common.channel')" />
+        <UInput v-model="version" :label="$t('Common.version')" :placeholder="$t('Common.version')" />
+        <UInput v-model="triplet" :label="$t('Common.triplet')" :placeholder="$t('Common.triplet')" />
       </div>
-      <UButton class="mr-4" @click="fetchData">Search</UButton>
+      <UButton class="mr-4" @click="fetchData">{{$t('Common.search')}}</UButton>
     </div>
     <UTable :columns="columns" :data="data" :loading="loading" sticky :rowKey="'id'" />
     <div class="flex justify-end">
@@ -42,10 +42,11 @@ type ResponseType = {
 
 const UButton = resolveComponent('UButton')
 const UDropdownMenu = resolveComponent('UDropdownMenu')
-const UBadge = resolveComponent('UBadge')
+const StatusBadge = resolveComponent('StatusBadge')
 const NuxtTime = resolveComponent('NuxtTime')
 
 const overlay = useOverlay()
+const { t: $t } = useI18n()
 
 // loading
 const loading = ref(false)
@@ -63,8 +64,8 @@ function onChangePage(newPage: number) {
 // filter
 const channel = ref<VersionChannel | undefined>()
 const channelOptions: Array<{ label: string, value: VersionChannel }> = [
-  { label: 'Stable', value: 'STABLE' },
-  { label: 'Beta', value: 'BETA' },
+  { label: $t('Common.Version.stable'), value: 'STABLE' },
+  { label: $t('Common.Version.beta'), value: 'BETA' },
   // { label: 'Alpha', value: 'ALPHA' },
 ]
 const version = ref('')
@@ -103,27 +104,27 @@ const columns: TableColumn<DataType>[] = [
   },
   {
     accessorKey: 'sync.package.version.display',
-    header: 'Version',
+    header: $t('Common.version'),
   },
   {
     accessorKey: 'sync.package.triplet',
-    header: 'Triplet',
+    header: $t('Common.triplet'),
   },
   {
     accessorKey: 'status',
-    header: 'Status',
+    header: $t('Common.status'),
     cell: ({ getValue }) => {
       const status = getValue() as string
       return h(
-        UBadge,
-        { color: statusBadgeColor[status], variant: 'subtle', class: 'mr-2' },
+        StatusBadge,
+        { status },
         () => status
       )
     }
   },
   {
     accessorKey: 'updatedAt',
-    header: 'Sync Time',
+    header: $t('Components.SyncJobs.sync_time'),
     cell: ({ getValue }) => {
       return h(NuxtTime, { dateStyle: 'long', timeStyle: 'medium', datetime: getValue() })
     }
@@ -161,10 +162,10 @@ function getRowItems(row: Row<DataType>) {
   return [
     {
       type: 'label',
-      label: 'Actions'
+      label: $t('Common.actions'),
     },
     {
-      label: 'Show Job Details',
+      label: $t('Components.SyncJobs.show_job_detail'),
       onSelect() {
         const slideover = overlay.create(JobDetailSlideover, {
           props: {
@@ -175,7 +176,7 @@ function getRowItems(row: Row<DataType>) {
       }
     },
     {
-      label: 'Show Job Log',
+      label: $t('Components.SyncJobs.show_job_log'),
       onSelect() {
         const slideover = overlay.create(JobLogSlideover, {
           props: {

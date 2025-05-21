@@ -6,15 +6,16 @@ import type { TabsItem } from '@nuxt/ui'
 
 const route = useRoute()
 const router = useRouter()
+const { t: $t } = useI18n()
 
 const items = ref<TabsItem[]>([
   {  
-    label: 'Versions',
+    label: $t('Components.NavigationMenu.versions'),
     icon: 'fa6-solid:tag',
     value: 'versions',
   },
   {
-    label: 'Sync Jobs',
+    label: $t('Components.NavigationMenu.syncjobs'),
     icon: 'fa6-solid:arrows-rotate',
     value: 'syncjobs',
   }

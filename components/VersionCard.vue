@@ -1,10 +1,10 @@
 <template>
   <div class="flex w-full items-center justify-between px-4 ">
     <UBadge color="neutral" variant="soft" class="w-24 justify-center">
-      {{ `${channelEmoji[channel]} ${channel}` }}
+      {{ channelEmoji[channel] }}&nbsp;{{ $t(`Common.Version.${channel}`) }}
     </UBadge>
     <div v-if="!info">
-      <span class="text-neutral-500">Not Synced</span>
+      <span class="text-neutral-500">{{ $t('Components.VersionCard.not_synced') }}</span>
     </div>
     <div v-else class="ml-4 w-full bg-elevated rounded-lg p-4">
       <div class="flex items-center justify-between">
@@ -14,7 +14,7 @@
               {{ info?.display }}
             </span>
             <span class="text-sm text-neutral-500">
-              Released <NuxtTime :datetime="info.releaseDate" relative />
+              {{ $t('Components.VersionCard.released_at') }} <NuxtTime :datetime="info.releaseDate" relative :locale="currentLocale?.iso" />
               (<NuxtTime :datetime="info.releaseDate" style="long" />)
             </span>
           </div>
@@ -29,7 +29,7 @@
             <UButton icon="lucide:cloud-download" size="md" color="primary" variant="solid" />
           </UDropdownMenu>
           <div v-if="loggedIn">
-            <UTooltip text="Sync Now">
+            <UTooltip :text="$t('Components.VersionCard.sync_now')">
               <UButton icon="lucide:refresh-ccw" size="md" color="neutral" variant="soft" @click="manualSync" />
             </UTooltip>
           </div>
@@ -58,6 +58,10 @@ const { channel, version } = defineProps({
     required: false,
   },
 })
+
+const { t: $t, locale, locales } = useI18n()
+
+const currentLocale = locales.value.find(l => l.code === locale.value)
 
 type VersionResponse = Version & {
   packages: (Package & {
@@ -108,7 +112,7 @@ const downloadMenu: Ref<DropdownMenuItem[][]> = ref([
   [
     {
       type: 'label',
-      label: 'All Platforms',
+      label: $t('Components.VersionCard.all_platforms'),
     },
     ...info!.packages.map(pkg => ({
       label: pkg.triplet,
@@ -145,7 +149,7 @@ onMounted(() => {
     downloadMenu.value.unshift([
       {
         type: 'label',
-        label: 'Recommended',
+        label: $t('Components.VersionCard.recommanded'),
       },
       {
         label: recommendedTriplet.value,

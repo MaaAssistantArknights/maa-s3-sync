@@ -1,0 +1,75 @@
+{
+  "Pages": {
+    "Index": {
+      "team_member_link": "我是MAA Team成员"
+    },
+    "Login": {
+      "title": "MAA 同步仪表盘",
+      "description": "登录仪表盘",
+      "tip": "确保您是MAA Team的管理员",
+      "github": "使用 GitHub 登录",
+      "account": "使用 MAA 账户登录"
+    }
+  },
+  "Components": {
+    "JobDetailSlideover": {
+      "title": "任务 #{0}",
+      "triggered_by": "触发者",
+      "started_at": "开始时间",
+      "finished_at": "结束时间",
+      "show_job_log": "显示任务日志"
+    },
+    "JobLogSlideover": {
+      "title": "任务 #{0} 的日志",
+      "auto_refresh": "自动刷新",
+      "auto_scroll": "自动滚动"
+    },
+    "NavigationMenu": {
+      "versions": "版本",
+      "syncjobs": "同步任务"
+    },
+    "PackageDetailSlideover": {
+      "title": "文件 {0}",
+      "last_sync_started_at": "上次同步开始时间",
+      "last_sync_finished_at": "上次同步结束时间",
+      "copy_link": "复制链接",
+      "copy_link_success": "链接已复制到剪贴板",
+      "copy_link_fail": "复制链接失败"
+    },
+    "SyncJobs": {
+      "show_job_detail": "显示任务详情",
+      "show_job_log": "显示任务日志",
+      "sync_time": "同步时间"
+    },
+    "VersionCard": {
+      "not_synced": "未同步",
+      "released_at": "发布于",
+      "sync_now": "立即同步",
+      "all_platforms": "所有平台",
+      "recommanded": "推荐"
+    }
+  },
+  "Common": {
+    "channel": "频道",
+    "search": "搜索",
+    "version": "版本",
+    "triplet": "平台",
+    "status": "状态",
+    "actions": "操作",
+    "job": "任务",
+    "file": "文件",
+    "download": "下载",
+    "Version": {
+      "stable": "稳定版",
+      "STABLE": "稳定版",
+      "beta": "测试版",
+      "BETA": "测试版"
+    },
+    "Status": {
+      "PENDING": "待处理",
+      "IN_PROGRESS": "进行中",
+      "COMPLETED": "已完成",
+      "ERROR": "错误"
+    }
+  }
+}

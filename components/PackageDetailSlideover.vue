@@ -1,35 +1,34 @@
 <template>
-  <USlideover :title="`Package ${package.fileName}`">
+  <USlideover :title="$t('Components.PackageDetailSlideover.title', [package.fileName])">
     <template #body>
       <div class="space-y-2">
         <div class="flex justify-between">
-          <strong>Version:</strong>
+          <strong>{{ $t('Common.version') }}:</strong>
           <span>{{ package.version.display }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Channel:</strong>
+          <strong>{{ $t('Common.channel') }}:</strong>
           <span>{{ package.version.channel }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Triplet:</strong>
+          <strong>{{ $t('Common.triplet') }}:</strong>
           <span>{{ package.triplet }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>File:</strong>
+          <strong>{{ $t('Common.file') }}:</strong>
           <span>{{ package.fileName }}</span>
         </div>
         <div class="flex justify-between">
-          <strong>Status:</strong>
-          <UBadge variant="subtle" :color="statusBadgeColor[package.sync.jobs[0].status]">{{ package.sync.jobs[0].status
-          }}</UBadge>
+          <strong>{{ $t('Common.status') }}:</strong>
+          <StatusBadge :status="package.sync.jobs[0].status" />
         </div>
         <div class="flex justify-between">
-          <strong>Last Sync Started At:</strong>
+          <strong>{{ $t('Components.PackageDetailSlideover.last_sync_started_at') }}:</strong>
           <span v-if="!package.sync.jobs[0].startedAt">N/A</span>
           <NuxtTime v-else :datetime="package.sync.jobs[0].startedAt" dateStyle="long" timeStyle="medium" />
         </div>
         <div class="flex justify-between">
-          <strong>Last Sync Finished At:</strong>
+          <strong>{{ $t('Components.PackageDetailSlideover.last_sync_finished_at') }}:</strong>
           <span v-if="!package.sync.jobs[0].finishedAt">N/A</span>
           <NuxtTime v-else :datetime="package.sync.jobs[0].finishedAt" dateStyle="long" timeStyle="medium" />
         </div>
@@ -37,11 +36,11 @@
       <USeparator class="my-4" color="secondary" />
       <div class="flex justify-end space-x-2">
         <UButton v-if="package.s3Url" color="primary" variant="solid" icon="lucide:clipboard-copy" @click="copyLink">
-          Copy Link
+          {{ $t('Components.PackageDetailSlideover.copy_link') }}
         </UButton>
         <UButton v-if="package.s3Url" color="primary" variant="solid" icon="lucide:cloud-download"
           @click="downloadFile">
-          Download
+          {{ $t('Common.download') }}
         </UButton>
       </div>
     </template>
@@ -63,6 +62,7 @@ const props = defineProps<{
 }>();
 
 const toast = useToast();
+const { t: $t } = useI18n();
 
 function downloadFile() {
   const s3Url = props.package.s3Url;
@@ -84,14 +84,14 @@ function copyLink() {
   }
   navigator.clipboard.writeText(s3Url).then(() => {
     toast.add({
-      title: 'Link copied to clipboard',
+      title: $t('Components.PackageDetailSlideover.copy_link_success'),
       color: 'success',
       icon: 'lucide:check',
     });
   }).catch(err => {
     console.error('Failed to copy link:', err);
     toast.add({
-      title: 'Failed to copy link',
+      title: $t('Components.PackageDetailSlideover.copy_link_fail'),
       color: 'error',
       icon: 'lucide:x',
     });
